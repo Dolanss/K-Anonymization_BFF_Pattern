@@ -1,0 +1,1 @@
+- fix: resolve CORS preflight rejection in CorsConfig for Docker network communication
