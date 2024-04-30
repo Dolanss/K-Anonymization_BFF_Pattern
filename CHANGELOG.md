@@ -1,1 +1,2 @@
 - fix: resolve CORS preflight rejection in CorsConfig for Docker network communication
+- fix: refresh JWT token on 401 response in frontend API client interceptor
