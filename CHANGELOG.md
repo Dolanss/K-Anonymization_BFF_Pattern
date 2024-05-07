@@ -1,3 +1,4 @@
 - fix: resolve CORS preflight rejection in CorsConfig for Docker network communication
 - fix: refresh JWT token on 401 response in frontend API client interceptor
 - fix: handle dataset smaller than k gracefully in KAnonymizationService
+- refactor: extract metric card data mapping to private helper in DashboardService
