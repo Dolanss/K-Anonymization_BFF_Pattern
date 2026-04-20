@@ -1,5 +1,6 @@
 package com.dataanon.api.service;
 
+import com.dataanon.api.config.CacheNames;
 import com.dataanon.api.domain.entity.Company;
 import com.dataanon.api.domain.entity.IndicatorGoal;
 import com.dataanon.api.domain.entity.MetricDefinition;
@@ -11,6 +12,8 @@ import com.dataanon.api.repository.CompanyRepository;
 import com.dataanon.api.repository.IndicatorGoalRepository;
 import com.dataanon.api.repository.MetricDefinitionRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Service;
 
@@ -24,6 +27,7 @@ public class GoalService {
     private final MetricDefinitionRepository metricRepository;
     private final CompanyRepository companyRepository;
 
+    @Cacheable(value = CacheNames.GOALS, key = "#companyId")
     public List<GoalDto> listGoals(Long companyId, User currentUser) {
         if (currentUser.getRole() == UserRole.CLIENT) {
             Long ownCompanyId = currentUser.getCompany() != null ? currentUser.getCompany().getId() : null;
@@ -34,6 +38,7 @@ public class GoalService {
                 .toList();
     }
 
+    @CacheEvict(value = CacheNames.GOALS, key = "#companyId")
     public GoalDto createGoal(Long companyId, CreateGoalRequest request, User currentUser) {
         if (currentUser.getRole() == UserRole.CLIENT) {
             Long ownCompanyId = currentUser.getCompany() != null ? currentUser.getCompany().getId() : null;
@@ -61,6 +66,7 @@ public class GoalService {
         return GoalDto.from(goalRepository.save(goal));
     }
 
+    @CacheEvict(value = CacheNames.GOALS, allEntries = true)
     public void deactivateGoal(Long goalId, User currentUser) {
         IndicatorGoal goal = goalRepository.findById(goalId)
                 .orElseThrow(() -> new RuntimeException("Goal not found"));

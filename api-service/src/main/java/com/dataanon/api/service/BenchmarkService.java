@@ -1,8 +1,10 @@
 package com.dataanon.api.service;
 
+import com.dataanon.api.config.CacheNames;
 import com.dataanon.api.dto.benchmark.BenchmarkDataDto;
 import com.dataanon.api.repository.AnonymizedBenchmarkRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -13,6 +15,10 @@ public class BenchmarkService {
 
     private final AnonymizedBenchmarkRepository benchmarkRepository;
 
+    @Cacheable(
+        value = CacheNames.BENCHMARKS,
+        key = "#sectorId + ':' + #metricId + ':' + #startYear + '-' + #startMonth + ':' + #endYear + '-' + #endMonth"
+    )
     public List<BenchmarkDataDto> getBenchmarks(
             String sectorId, Integer metricId,
             Integer startYear, Integer startMonth,
@@ -34,6 +40,7 @@ public class BenchmarkService {
                 .toList();
     }
 
+    @Cacheable(value = CacheNames.SECTORS)
     public List<String> listSectors() {
         return benchmarkRepository.findDistinctSectorIds();
     }

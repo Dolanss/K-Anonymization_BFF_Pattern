@@ -1,5 +1,6 @@
 package com.dataanon.api.service;
 
+import com.dataanon.api.config.CacheNames;
 import com.dataanon.api.domain.entity.AnonymizedBenchmark;
 import com.dataanon.api.domain.entity.CompanyMetricValue;
 import com.dataanon.api.domain.entity.MetricDefinition;
@@ -10,6 +11,7 @@ import com.dataanon.api.repository.AnonymizedBenchmarkRepository;
 import com.dataanon.api.repository.CompanyMetricValueRepository;
 import com.dataanon.api.repository.MetricDefinitionRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
@@ -28,6 +30,7 @@ public class DashboardService {
     private final AnonymizedBenchmarkRepository benchmarkRepository;
     private final CompanyMetricValueRepository valueRepository;
 
+    @Cacheable(value = CacheNames.DASHBOARD, key = "#currentUser.id + ':' + #periodMonths")
     public DashboardOverviewResponse getOverview(User currentUser, int periodMonths) {
         LocalDate now = LocalDate.now();
         int refYear = now.getYear();

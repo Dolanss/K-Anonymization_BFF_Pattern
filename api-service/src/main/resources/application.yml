@@ -23,6 +23,22 @@ spring:
     schemas: anonymized
     locations: classpath:db/migration
     baseline-on-migrate: true
+  data:
+    redis:
+      host: ${REDIS_HOST:localhost}
+      port: ${REDIS_PORT:6379}
+  cache:
+    type: redis
+    redis:
+      time-to-live: 300000
+
+cache:
+  ttl:
+    benchmarks: 3600000
+    metrics: 86400000
+    sectors: 86400000
+    dashboard: 300000
+    goals: 60000
 
 jwt:
   secret: ${JWT_SECRET:404E635266556A586E3272357538782F413F4428472B4B6250645367566B5970}
@@ -35,7 +51,7 @@ management:
   endpoints:
     web:
       exposure:
-        include: health,info
+        include: health,info,caches
   endpoint:
     health:
       show-details: always
