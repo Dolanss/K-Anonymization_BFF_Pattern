@@ -1,0 +1,66 @@
+version: '3.9'
+
+services:
+  postgres:
+    image: postgres:16-alpine
+    container_name: dataanon-postgres
+    environment:
+      POSTGRES_USER: dataanon
+      POSTGRES_PASSWORD: dataanon_secret
+      POSTGRES_DB: dataanon
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./init-db.sql:/docker-entrypoint-initdb.d/init-db.sql
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U dataanon"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  anonymization-service:
+    build:
+      context: ./anonymization-service
+      dockerfile: Dockerfile
+    container_name: dataanon-anonymization
+    environment:
+      STAGING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/dataanon?currentSchema=staging
+      ANONYMIZED_DATASOURCE_URL: jdbc:postgresql://postgres:5432/dataanon?currentSchema=anonymized
+      DATASOURCE_USERNAME: dataanon
+      DATASOURCE_PASSWORD: dataanon_secret
+    ports:
+      - "8081:8081"
+    depends_on:
+      postgres:
+        condition: service_healthy
+
+  api-service:
+    build:
+      context: ./api-service
+      dockerfile: Dockerfile
+    container_name: dataanon-api
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/dataanon?currentSchema=anonymized
+      SPRING_DATASOURCE_USERNAME: dataanon
+      SPRING_DATASOURCE_PASSWORD: dataanon_secret
+      JWT_SECRET: 404E635266556A586E3272357538782F413F4428472B4B6250645367566B5970
+      JWT_EXPIRATION: 28800000
+    ports:
+      - "8080:8080"
+    depends_on:
+      postgres:
+        condition: service_healthy
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: dataanon-frontend
+    ports:
+      - "3000:80"
+    depends_on:
+      - api-service
+
+volumes:
+  postgres_data:
