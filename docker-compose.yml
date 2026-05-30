@@ -5,9 +5,9 @@ services:
     image: postgres:16-alpine
     container_name: dataanon-postgres
     environment:
-      POSTGRES_USER: dataanon
-      POSTGRES_PASSWORD: dataanon_secret
-      POSTGRES_DB: dataanon
+      POSTGRES_USER: ${POSTGRES_USER:-dataanon}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-dataanon_dev_password}
+      POSTGRES_DB: ${POSTGRES_DB:-dataanon}
     ports:
       - "5432:5432"
     volumes:
@@ -38,8 +38,8 @@ services:
     environment:
       STAGING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/dataanon?currentSchema=staging
       ANONYMIZED_DATASOURCE_URL: jdbc:postgresql://postgres:5432/dataanon?currentSchema=anonymized
-      DATASOURCE_USERNAME: dataanon
-      DATASOURCE_PASSWORD: dataanon_secret
+      DATASOURCE_USERNAME: ${DATASOURCE_USERNAME:-dataanon}
+      DATASOURCE_PASSWORD: ${DATASOURCE_PASSWORD:-dataanon_dev_password}
     ports:
       - "8081:8081"
     depends_on:
@@ -53,12 +53,12 @@ services:
     container_name: dataanon-api
     environment:
       SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/dataanon?currentSchema=anonymized
-      SPRING_DATASOURCE_USERNAME: dataanon
-      SPRING_DATASOURCE_PASSWORD: dataanon_secret
-      JWT_SECRET: 404E635266556A586E3272357538782F413F4428472B4B6250645367566B5970
-      JWT_EXPIRATION: 28800000
-      REDIS_HOST: redis
-      REDIS_PORT: 6379
+      SPRING_DATASOURCE_USERNAME: ${SPRING_DATASOURCE_USERNAME:-dataanon}
+      SPRING_DATASOURCE_PASSWORD: ${SPRING_DATASOURCE_PASSWORD:-dataanon_dev_password}
+      JWT_SECRET: ${JWT_SECRET:-dev-only-change-me-change-me-32-chars}
+      JWT_EXPIRATION: ${JWT_EXPIRATION:-28800000}
+      REDIS_HOST: ${REDIS_HOST:-redis}
+      REDIS_PORT: ${REDIS_PORT:-6379}
     ports:
       - "8080:8080"
     depends_on:

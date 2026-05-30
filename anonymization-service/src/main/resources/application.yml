@@ -14,14 +14,14 @@ staging:
   datasource:
     url: ${STAGING_DATASOURCE_URL:jdbc:postgresql://localhost:5432/dataanon?currentSchema=staging}
     username: ${DATASOURCE_USERNAME:dataanon}
-    password: ${DATASOURCE_PASSWORD:dataanon_secret}
+    password: ${DATASOURCE_PASSWORD:dataanon_dev_password}
     driver-class-name: org.postgresql.Driver
 
 anonymized:
   datasource:
     url: ${ANONYMIZED_DATASOURCE_URL:jdbc:postgresql://localhost:5432/dataanon?currentSchema=anonymized}
     username: ${DATASOURCE_USERNAME:dataanon}
-    password: ${DATASOURCE_PASSWORD:dataanon_secret}
+    password: ${DATASOURCE_PASSWORD:dataanon_dev_password}
     driver-class-name: org.postgresql.Driver
 
 anonymization:

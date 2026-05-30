@@ -22,7 +22,7 @@ INSERT INTO anonymized.companies (name, sector_id, region, size) VALUES
     ('Delta Healthcare Ltd.',    'HEALTHCARE',    'NORTHEAST', 'MEDIUM')
 ON CONFLICT DO NOTHING;
 
--- Demo Users (passwords: Admin@123, Analyst@123, Client@123 – BCrypt hashed)
+-- Local demo users with BCrypt password hashes. Replace for any non-local environment.
 INSERT INTO anonymized.users (email, password_hash, role, name, company_id) VALUES
     ('admin@dataanon.local',
      '$2a$10$N9qo8uLOickgx2ZMRZoMyeIjZAgcfl7p92ldGxad68LJZdL17lhWy',

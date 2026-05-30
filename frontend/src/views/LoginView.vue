@@ -37,10 +37,6 @@
           {{ loading ? 'Signing in…' : 'Sign in' }}
         </button>
       </form>
-
-      <p class="login-hint text-muted">
-        Demo: admin@dataanon.local / Admin@123
-      </p>
     </div>
   </div>
 </template>
@@ -99,5 +95,4 @@ async function handleLogin() {
 .form-group input:focus { border-color: var(--color-primary); }
 .login-error { color: var(--color-danger); font-size: 13px; margin-bottom: 12px; }
 .login-btn { width: 100%; justify-content: center; padding: 12px; }
-.login-hint { text-align: center; margin-top: 20px; font-size: 12px; }
 </style>
